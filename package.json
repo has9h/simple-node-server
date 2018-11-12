@@ -19,5 +19,8 @@
   "homepage": "https://github.com/has9h/simple-node-server#readme",
   "dependencies": {
     "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
   }
 }

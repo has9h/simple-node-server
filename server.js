@@ -5,11 +5,11 @@ var app = express();            // The express app
 var server = http.Server(app);  // Adding the server
 
 app.get('/', function(request, response){       // '/' is the root URL
-  response.sendFile(__dirname+'/index.html');   //''
+  response.sendFile(__dirname+'/index.html');
 });
 
-app.get('/about', function(request, response){       // '/' is the root URL
-  response.sendFile(__dirname+'/about.html');       //''
+app.get('/about-page', function(request, response){       // '/' is the root URL
+  response.sendFile(__dirname+'/about.html');
 });
 
 server.listen(process.env.PORT, process.env.IP, function(){

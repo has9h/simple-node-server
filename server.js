@@ -3,13 +3,39 @@ var http = require('http');
 var express = require("express");
 var app = express();            // The express app
 var server = http.Server(app);  // Adding the server
+var bodyParser = require('body-parser');
 
-app.get('/', function(request, response){       // '/' is the root URL
+// Configuring app for body-parser
+app.use(bodyParser.json());
+// Ensuring it uses encoded URLs
+app.use(bodyParser.urlencoded({extended:true}));
+
+app.get('/', function(request, response){                 // '/' is the root URL
   response.sendFile(__dirname+'/index.html');
 });
 
 app.get('/about-page', function(request, response){       // '/' is the root URL
   response.sendFile(__dirname+'/about.html');
+});
+
+app.get('/new-article', function(request, response){
+  response.sendFile(__dirname+'/form.html');
+});
+
+var article = [];
+
+app.post('/article/create', function(request, response){
+  console.log(request.body);
+  // Required field: Title
+  if(!request.body.title){
+    return response.status(400).json({error:"Please add a title"});
+  }
+  article.push(request.body);
+  return response.status(200).json({message: "Article successfully created"});
+});
+
+app.get('/article/list', function(request, response){
+  return response.status(200).json({articles: article});
 });
 
 server.listen(process.env.PORT, process.env.IP, function(){

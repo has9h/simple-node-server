@@ -34,8 +34,20 @@ app.post('/article/create', function(request, response){
   return response.status(200).json({message: "Article successfully created"});
 });
 
+
 app.get('/article/list', function(request, response){
   return response.status(200).json({articles: article});
+});
+
+// Fetching for EJS files
+// articleID is a variable
+// use index of array for articleID
+article.push({title: "Test article 1", content: "Content 1"});
+article.push({title: "Test article 2", content: "Content 2"});
+
+app.get('/article/:articleID', function(request, response){
+  response.render('../article.ejs', {
+    article:article[request.params.articleID]});
 });
 
 server.listen(process.env.PORT, process.env.IP, function(){

@@ -6,26 +6,51 @@ var server = http.Server(app);  // Adding the server
 var bodyParser = require('body-parser');
 
 // Import MongoDB:
-var mongo = require('mongodb');
+// Not required if mongoose is installed and running; does this for you
+// var mongo = require('mongodb');
 // Specifying port for C9
 var db;                                                   // Database client if connection is successfull
 var db_url = "mongodb://" + process.env.IP + ":27017";    //process.env specifies the port of the workspace(?)
 // For local instance:
 // var db_url = "mongodb://localhost:27017";
 
-mongo.MongoClient.connect(db_url, {useNewUrlParser: true}, function(err, client){
-  if(err){
-    console.log('Could not connect to MongoDB');
-  }else{
-    db = client.db('node-cw9');
+// Working with Mongoose:
+var mongoose = require("mongoose");
+mongoose.connect(db_url + "/node-cw9");
+mongoose.connection.on('error', function(err){
+  console.log(err);
+  console.log('Could not connect to MongoDB');
+});
+
+var Schema = mongoose.Schema;
+var articleSchema = new Schema({
+  title: {
+    type: String,
+    required:"Title required"
+  },
+  content: {
+    type: String
   }
 });
+
+var Article = mongoose.model('Article', articleSchema);
+
+// mongo.MongoClient.connect(db_url, {useNewUrlParser: true}, function(err, client){
+//   if(err){
+//     console.log('Could not connect to MongoDB');
+//   }else{
+//     db = client.db('node-cw9');
+//   }
+// });
+// Remember find() returns an ARRAY; findOne returns an object(?)
 
 // Saving user data
 var save = function(form_data){
   db.createCollection('articles', function(err, collection){
     console.log("Collection Created");
   });
+  var collection = db.collection('articles');
+  collection.save(form_data);
 }
 
 // Configuring app for body-parser
@@ -48,13 +73,23 @@ app.get('/new-article', function(request, response){
 var article = [];
 
 app.post('/article/create', function(request, response){
+  // Generating a new article with mongoose, using the schema:
+  var new_article = new Article(request.body);
+  new_article.save(function(err, data){
+    if(err)
+      return response.status(400).json({error:"Please add a title"});
+    console.log(data);
+    return response.status(200).json({message: "Article successfully created"});
+  });
+  
   console.log(request.body);
   // Required field: Title
-  if(!request.body.title){
-    return response.status(400).json({error:"Please add a title"});
-  }
-  article.push(request.body);                         //This should be saved to the database
-  return response.status(200).json({message: "Article successfully created"});
+  // if(!request.body.title){
+  //   return response.status(400).json({error:"Please add a title"});
+  // }
+  // article.push(request.body);     //This should be saved to the database
+  // save(request.body);
+  // return response.status(200).json({message: "Article successfully created"});
 });
 
 

@@ -1,1 +1,3 @@
-# simple-node-server
+# Simple Node Server
+
+## Following the MVC Architecture

@@ -9,8 +9,6 @@ module.exports = function(app){
     
     app.post('/article/create', article.create);
     
-    
-    
     app.get('/article/list', article.list);
     
     // Fetching for EJS files

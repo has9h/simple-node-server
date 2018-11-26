@@ -9,6 +9,8 @@
         <h1>New Article</h1>
         <input id="title" type="text" name="title" placeholder="Enter Title">
         <br /> <br />
+        <input type="number" name="reading_time" id="reading" min="1" required>
+        <br /> <br />
         <textarea id="content" type="text" name="textarea"/> </textarea>
         <br /> <br />
         <button id="submit" type="button">Submit</button>
@@ -20,10 +22,11 @@
         <!--Input handling and AJAX Code-->
         <script>
             // Declaring a var to capture the input values
-            var article = {title:"", content:""};
+            var article = {title:"", content:"", reading_time:""};
             $('#submit').click(function(event){
                 article.title = $('#title').val();
                 article.content = $('#content').val();
+                article.reading_time = $('#reading').val();
                 $.ajax({
                     method:"POST",
                     url: '/article/create',
